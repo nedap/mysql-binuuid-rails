@@ -1,0 +1,41 @@
+# coding: utf-8
+lib = File.expand_path("../lib", __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+
+require "mysql-binuuid/version"
+
+Gem::Specification.new do |spec|
+  spec.name     = "mysql-binuuid-rails"
+  spec.version  = MySQLBinUUID::VERSION
+  spec.authors  = ["Mark Oude Veldhuis"]
+  spec.email    = ["mark.oudeveldhuis@nedap.com"]
+
+  spec.summary  = "Let ActiveRecord serialize and cast your UUIDs to and from binary columns in your database."
+  spec.homepage = "https://github.com/nedap/mysql-binuuid-rails"
+  spec.license  = "MIT"
+
+  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
+  # to allow pushing to a single host or delete this section to allow pushing to any host.
+  if spec.respond_to?(:metadata)
+    spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
+  else
+    raise "RubyGems 2.0 or newer is required to protect against " \
+      "public gem pushes."
+  end
+
+  spec.require_paths = ["lib"]
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^(test|spec|features)/})
+  end
+
+  spec.required_ruby_version = ">= 2.2"
+
+  spec.add_runtime_dependency "rails", ENV["RAILS_VERSION"] || ">= 5"
+
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "mysql2"
+  spec.add_development_dependency "minitest"
+  spec.add_development_dependency "minitest-spec-context"
+  spec.add_development_dependency "minitest-hooks"
+end
