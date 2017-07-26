@@ -76,6 +76,56 @@ class Book < ApplicationRecord
 end
 ```
 
+# Migrating from ActiveUUID
+
+There's a couple of things you need to take into consideration when you're
+migrating from ActiveUUID to `mysql-binuuid-rails`.
+
+## No `uuid` column in database migrations
+
+ActiveUUID comes with a neat column type that you can use in migrations. Since
+`mysql-binuuid-rails` does not, you will have to change all migrations in which
+you leveraged on that migration column if you want your migrations to keep
+working for new setups.
+
+The idea behind *not* providing a `uuid` type for columnns in migrations is
+that you are aware of what the actual type of the column is you're creating,
+and that it is not hidden magic.
+
+It's pretty simple:
+
+
+```ruby
+# Anywhere where you did this in your migrations...
+
+create_table :books do |t|
+  t.uuid :reference, ...
+end
+
+# ..you should change these kinds of lines into the kind described
+# below. It's what ActiveUUID  did for you, but what you now have
+# to do yourself.
+
+create_table :books do |t|
+  t.binary :reference, limit: 16, ...
+end
+```
+
+## No UUIDTools
+
+ActiveUUID comes with [UUIDTools](https://github.com/sporkmonger/uuidtools).
+`mysql-binuuid-rails` does not. When you retrieve a UUID typed attribute from
+a model when using ActiveUUID, the result is a `UUIDTools::UUID` object. When
+you retrieve a UUID typed attribute from a model when using
+`mysql-binuuid-rails`, you just get a `String` of 36 characters (it includes
+the dashes).
+
+Migrating shouldn't be that difficult though. `UUIDTools::UUID` implements
+`#to_s`, which returns precisely the same as `mysql-binuuid-rails` returns
+by default. But it's good to be aware of this in case you're running into
+weirdness.
+
+
 # Contributing
 
 To start coding on `mysql-binuuid-rails`, fork the project, clone it locally
