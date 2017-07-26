@@ -18,7 +18,7 @@ encoding. If every character requires 2 bytes, storing it would already cost
 you 64 bytes. And that's a lot, if you think about the fact that a UUID is
 only 128 bits.
 
-Being 128 bits, a UUID first precisely in a column of 16 bytes. Though it won't
+Being 128 bits, a UUID fits precisely in a column of 16 bytes. Though it won't
 be really readable it sure saves up a lot of space and it's only 4x bigger
 than a 32-bit integer, or 2x bigger than a 64-bit integer.
 
