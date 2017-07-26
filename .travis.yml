@@ -11,4 +11,5 @@ env:
     - RAILS_VERSION=5.1.1
     - RAILS_VERSION=5.1.2
 before_install:
+  - gem update bundler
   - bundle update rails
