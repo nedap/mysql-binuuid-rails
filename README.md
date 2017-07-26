@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nedap/mysql-binuuid-rails.svg?branch=master)](https://travis-ci.org/nedap/mysql-binuuid-rails)
+
 # mysql-binuuid-rails
 
 `mysql-binuuid-rails` leverages the Attributes API of Rails 5 and lets you
