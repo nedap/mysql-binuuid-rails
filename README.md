@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/nedap/mysql-binuuid-rails.svg?branch=master)](https://travis-ci.org/nedap/mysql-binuuid-rails)
+[![Code Climate](https://codeclimate.com/github/nedap/mysql-binuuid-rails/badges/gpa.svg)](https://codeclimate.com/github/nedap/mysql-binuuid-rails)
 
 # mysql-binuuid-rails
 
