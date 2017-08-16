@@ -81,6 +81,18 @@ end
 There's a couple of things you need to take into consideration when you're
 migrating from ActiveUUID to `mysql-binuuid-rails`.
 
+## Replace `include ActiveUUID::UUID` in your models
+
+In your models where you did `include ActiveUUID::UUID`, you now have to
+specify the attribute which is a UUID instead:
+
+```ruby
+class Book < ApplicationRecord
+  attribute :uuid, MySQLBinUUID::Type.new
+end
+```
+
+
 ## No `uuid` column in database migrations
 
 ActiveUUID comes with a neat column type that you can use in migrations. Since
