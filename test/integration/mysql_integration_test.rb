@@ -62,6 +62,8 @@ describe MyUuidModel do
       end
 
       it "validates uniqueness" do
+        skip("Skipping uniqueness validation test, known issue on Rails 5.0") if Rails.version < "5.1"
+
         uuid = sample_uuid
         MyUuidModelWithValidations.create!(the_uuid: uuid)
         duplicate = MyUuidModelWithValidations.new(the_uuid: uuid)
