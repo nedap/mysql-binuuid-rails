@@ -35,6 +35,9 @@ describe MyUuidModel do
     ActiveRecord::Base.establish_connection(db_config)
     connection.create_table("my_uuid_models")
     connection.add_column("my_uuid_models", "the_uuid", :binary, limit: 16)
+
+    # Uncomment this line to get logging on stdout
+    # ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 
   after(:all) do
@@ -48,6 +51,25 @@ describe MyUuidModel do
       my_model = MyUuidModel.new(the_uuid: sample_uuid)
       assert_equal sample_uuid, my_model.the_uuid
       assert_equal sample_uuid, my_model.attributes["the_uuid"]
+    end
+  end
+
+  context "before saving" do
+    describe "rails validation" do
+
+      class MyUuidModelWithValidations < MyUuidModel
+        validates :the_uuid, uniqueness: true
+      end
+
+      it "validates uniqueness" do
+        uuid = sample_uuid
+        MyUuidModelWithValidations.create!(the_uuid: uuid)
+        duplicate = MyUuidModelWithValidations.new(the_uuid: uuid)
+
+        assert_equal false, duplicate.valid?
+        assert_equal :taken, duplicate.errors.details[:the_uuid].first[:error]
+      end
+
     end
   end
 
