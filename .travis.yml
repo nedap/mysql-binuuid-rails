@@ -10,5 +10,6 @@ env:
     - RAILS_VERSION=5.1.6
     - RAILS_VERSION=5.2.0
 before_install:
+  - gem install bundler
   - gem update bundler
   - bundle update
