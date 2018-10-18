@@ -1,6 +1,7 @@
 module MySQLBinUUID
-  class Type < ActiveModel::Type::Binary
+  class InvalidUUID < StandardError; end
 
+  class Type < ActiveModel::Type::Binary
     def type
       :uuid
     end
@@ -27,7 +28,9 @@ module MySQLBinUUID
     # it to the database.
     def serialize(value)
       return if value.nil?
-      Data.new(strip_dashes(value))
+      undashed_uuid = strip_dashes(value)
+      raise MySQLBinUUID::InvalidUUID, "value #{value} is not a valid UUID" unless valid_undashed_uuid?(undashed_uuid)
+      Data.new(undashed_uuid)
     end
 
     # We're inheriting from the Binary type since ActiveRecord in that case
@@ -73,5 +76,8 @@ module MySQLBinUUID
       uuid.delete("-")
     end
 
+    def valid_undashed_uuid?(value)
+      value =~ /\A[[:xdigit:]]{32}\z/
+    end
   end
 end
