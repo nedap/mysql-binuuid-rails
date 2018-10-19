@@ -112,6 +112,24 @@ describe MyUuidModel do
       assert_equal results.first, @my_model
       assert_equal results.first.the_uuid, sample_uuid
     end
+
+    it "can't be used to inject SQL using .where" do
+      assert_raises MySQLBinUUID::InvalidUUID do
+        MyUuidModel.where(the_uuid: "' OR ''='").first
+      end
+    end
+
+    it "can't be used to inject SQL using .find_by" do
+      assert_raises MySQLBinUUID::InvalidUUID do
+        MyUuidModel.find_by(the_uuid: "' OR ''='")
+      end
+    end
+
+    it "can't be used to inject SQL while creating" do
+      assert_raises MySQLBinUUID::InvalidUUID do
+        MyUuidModel.create!(the_uuid: "40' + x'40")
+      end
+    end
   end
 
 end

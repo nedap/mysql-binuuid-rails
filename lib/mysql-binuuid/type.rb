@@ -1,6 +1,7 @@
 module MySQLBinUUID
-  class Type < ActiveModel::Type::Binary
+  class InvalidUUID < StandardError; end
 
+  class Type < ActiveModel::Type::Binary
     def type
       :uuid
     end
@@ -27,7 +28,16 @@ module MySQLBinUUID
     # it to the database.
     def serialize(value)
       return if value.nil?
-      Data.new(strip_dashes(value))
+      undashed_uuid = strip_dashes(value)
+
+      # To avoid SQL injection, verify that it looks like a UUID. ActiveRecord
+      # does not explicity escape the Binary data type. escaping is implicit as
+      # the Binary data type always converts its value to a hex string.
+      unless valid_undashed_uuid?(undashed_uuid)
+        raise MySQLBinUUID::InvalidUUID, "#{value} is not a valid UUID"
+      end
+
+      Data.new(undashed_uuid)
     end
 
     # We're inheriting from the Binary type since ActiveRecord in that case
@@ -73,5 +83,10 @@ module MySQLBinUUID
       uuid.delete("-")
     end
 
+    # Verify that the undashed version of a UUID only contains characters that
+    # represent a hexadecimal value.
+    def valid_undashed_uuid?(value)
+      value =~ /\A[[:xdigit:]]{32}\z/
+    end
   end
 end
