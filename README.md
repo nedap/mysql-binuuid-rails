@@ -152,6 +152,14 @@ a console with the changes you made, run `bin/console`.
 Bug reports and pull requests are welcome on GitHub at
 https://github.com/nedap/mysql-binuuid-rails
 
+## Contributors
+
+Thank you:
+
+  * Emmanuel Joubaud ([@ejoubaud](https://github.com/ejoubaud))
+  * Geoff Evason ([@geoffevason](https://github.com/geoffevason))
+  * Stanisław Pitucha ([@viraptor](https://github.com/viraptor))
+
 
 # License
 
