@@ -118,7 +118,7 @@ describe MyUuidModel do
         MyUuidModel.where(the_uuid: "' OR ''='").first
       end
     end
-    
+
     it "can't be used to inject SQL using .find_by" do
       assert_raises MySQLBinUUID::InvalidUUID do
         MyUuidModel.find_by(the_uuid: "' OR ''='")
