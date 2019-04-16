@@ -17,7 +17,7 @@ module MySQLBinUUID
         # We cannot unpack something that looks like a UUID, with or without
         # dashes. Not entirely sure why ActiveRecord does a weird combination of
         # cast and serialize before anything needs to be saved..
-        undashed_uuid = value.unpack("H*")[0]
+        undashed_uuid = value.unpack1('H*')
         add_dashes(undashed_uuid.to_s)
       else
         super
