@@ -13,7 +13,7 @@ module MySQLBinUUID
         # It could be a Data object, in which case we should add dashes to the
         # string value from there.
         add_dashes(value.to_s)
-      elsif value.is_a?(String) && value.encoding == Encoding::ASCII_8BIT
+      elsif value.is_a?(String) && value.encoding == Encoding::ASCII_8BIT && strip_dashes(value).length != 32
         # We cannot unpack something that looks like a UUID, with or without
         # dashes. Not entirely sure why ActiveRecord does a weird combination of
         # cast and serialize before anything needs to be saved..
