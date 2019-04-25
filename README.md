@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/nedap/mysql-binuuid-rails.svg?branch=master)](https://travis-ci.org/nedap/mysql-binuuid-rails)
+[![Build Status](https://semaphoreci.com/api/v1/nedap-healthcare/mysql-binuuid-rails/branches/master/badge.svg)](https://semaphoreci.com/nedap-healthcare/mysql-binuuid-rails)
 [![Code Climate](https://codeclimate.com/github/nedap/mysql-binuuid-rails/badges/gpa.svg)](https://codeclimate.com/github/nedap/mysql-binuuid-rails)
 
 # mysql-binuuid-rails
