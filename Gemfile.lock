@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    mysql-binuuid-rails (1.1.1)
+    mysql-binuuid-rails (1.2.0)
       rails (>= 5)
 
 GEM
@@ -74,7 +74,7 @@ GEM
     minitest-spec-context (0.0.3)
     mysql2 (0.4.10)
     nio4r (2.3.1)
-    nokogiri (1.10.2)
+    nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     rack (2.0.7)
     rack-test (1.1.0)

@@ -19,7 +19,7 @@ describe MyUuidModel do
     { adapter:  'mysql2',
       host:     'localhost',
       username: 'root',
-      password: '',
+      password: ENV['DATABASE_MYSQL_PASSWORD'] || '',
       database: 'binuuid_rails_test' }
   end
 

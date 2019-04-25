@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
     f.match(%r{^(test|spec|features)/})
   end
 
-  spec.required_ruby_version = ">= 2.3"
+  spec.required_ruby_version = ">= 2.4"
 
   spec.add_runtime_dependency "rails", ENV["RAILS_VERSION"] || ">= 5"
 
