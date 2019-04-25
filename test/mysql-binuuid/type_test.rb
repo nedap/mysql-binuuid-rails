@@ -32,6 +32,13 @@ describe MySQLBinUUID::Type do
     it 'returns the value itself if provided with something else' do
       assert_equal 42, @type.cast(42)
     end
+
+    it 'returns a uuid if provided with a uuid' do
+      uuid = SecureRandom.uuid.encode(Encoding::ASCII_8BIT)
+      data = MySQLBinUUID::Type.new.cast(uuid)
+
+      assert_equal uuid, @type.cast(data)
+    end
   end
 
   describe '#serialize' do
