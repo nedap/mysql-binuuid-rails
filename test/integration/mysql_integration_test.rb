@@ -1,7 +1,3 @@
-require 'active_record'
-require 'minitest/hooks'
-require 'securerandom'
-
 require_relative '../test_helper'
 
 class MyUuidModel < ActiveRecord::Base
