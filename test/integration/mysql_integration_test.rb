@@ -1,4 +1,4 @@
-require 'rails/all'
+require 'active_record'
 require 'minitest/hooks'
 require 'securerandom'
 
@@ -62,7 +62,7 @@ describe MyUuidModel do
       end
 
       it "validates uniqueness" do
-        skip("Skipping uniqueness validation test, known issue on Rails 5.0") if Rails.version < "5.1"
+        skip("Skipping uniqueness validation test, known issue on Rails/ActiveRecord 5.0") if ActiveRecord.version < Gem::Version.new("5.1.0")
 
         uuid = sample_uuid
         MyUuidModelWithValidations.create!(the_uuid: uuid)
