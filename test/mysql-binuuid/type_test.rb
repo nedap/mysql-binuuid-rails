@@ -1,7 +1,5 @@
 require_relative '../test_helper'
 
-require 'securerandom'
-
 describe MySQLBinUUID::Type do
 
   before do
