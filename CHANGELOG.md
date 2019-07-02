@@ -1,3 +1,10 @@
+# 1.2.1
+
+  * Development: Now that we're running Semaphore, no need for Travis (#31)
+  * Reduce dependencies listed in gemspec (#30) (Dependency on Rails removed,
+    only need to depend on ActiveRecord)
+
+
 # 1.2.0
 
   * Set minimum Ruby version from 2.3 to 2.4 (2.3 is EOL and no longer maintained)
