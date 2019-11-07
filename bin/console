@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "rails/all"
+require "active_record/railtie"
 require "mysql-binuuid-rails"
 
 # You can add fixtures and/or initialization code here to make experimenting
