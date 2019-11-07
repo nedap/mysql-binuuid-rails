@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest"
   spec.add_development_dependency "minitest-spec-context"
   spec.add_development_dependency "minitest-hooks"
+  spec.add_development_dependency "rails", ENV["RAILS_VERSION"] || ">= 5" # required for a console
 end

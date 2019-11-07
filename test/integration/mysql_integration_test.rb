@@ -25,7 +25,7 @@ describe MyUuidModel do
 
     # Create a connection without selecting a database first to create the db
     ActiveRecord::Base.establish_connection(db_config_without_db_name)
-    connection.create_database(db_config[:database])
+    connection.create_database(db_config[:database], charset: "utf8mb4")
 
     # Then establish a new connection with the database name
     ActiveRecord::Base.establish_connection(db_config)
