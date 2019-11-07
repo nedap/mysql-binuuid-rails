@@ -3,11 +3,11 @@
 
 # mysql-binuuid-rails
 
-`mysql-binuuid-rails` leverages the Attributes API of Rails 5 and lets you
-define attributes of type UUID on your models. By doing so, you can store your
-UUIDs as binary values in your database, and still be able to query using
-the string representations since the database will take care of the
-type conversion.
+`mysql-binuuid-rails` lets you define attributes of a UUID type on your models
+by leveraging the Attributes API that has been available since Rails 5. By doing
+so, you can store your UUIDs as binary values in your database, and still be
+able to query using the string representations since the database will take care
+of the type conversion.
 
 As the name suggests, it only supports MySQL. If you're on PostgreSQL, you
 can use UUIDs the proper way already.
@@ -151,6 +151,19 @@ a console with the changes you made, run `bin/console`.
 
 Bug reports and pull requests are welcome on GitHub at
 https://github.com/nedap/mysql-binuuid-rails
+
+## Testing
+
+Continuous integration / automated tests run [on Semaphore](https://semaphoreci.com/nedap-healthcare/mysql-binuuid-rails).
+Tests are run against the latest patch version of every minor ActiveRecord release
+since 5.0, as well as *every* patch version of the latest minor version.
+
+Run tests yourself to verify everything is still working:
+
+```
+$ bundle exec rake
+```
+
 
 ## Contributors
 
