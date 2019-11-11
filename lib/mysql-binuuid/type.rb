@@ -27,7 +27,7 @@ module MySQLBinUUID
     # Invoked when the provided value needs to be serialized before storing
     # it to the database.
     def serialize(value)
-      return if value.nil?
+      return if value.blank?
       undashed_uuid = strip_dashes(value)
 
       # To avoid SQL injection, verify that it looks like a UUID. ActiveRecord

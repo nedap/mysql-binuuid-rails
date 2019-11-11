@@ -44,6 +44,10 @@ describe MySQLBinUUID::Type do
       assert_nil @type.serialize(nil)
     end
 
+    it 'returns nil if provided with empty string' do
+      assert_equal nil, @type.serialize('')
+    end
+
     it 'returns a MySQLBinUUID::Type::Data with stripped values if provided with a UUID' do
       uuid = "3511f33f-3c93-4806-9846-52b4a7618298"
 
