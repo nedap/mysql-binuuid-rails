@@ -1,4 +1,3 @@
-[![Build Status](https://semaphoreci.com/api/v1/nedap-healthcare/mysql-binuuid-rails/branches/master/badge.svg)](https://semaphoreci.com/nedap-healthcare/mysql-binuuid-rails)
 [![Code Climate](https://codeclimate.com/github/nedap/mysql-binuuid-rails/badges/gpa.svg)](https://codeclimate.com/github/nedap/mysql-binuuid-rails)
 
 # mysql-binuuid-rails
@@ -154,7 +153,7 @@ https://github.com/nedap/mysql-binuuid-rails
 
 ## Testing
 
-Continuous integration / automated tests run [on Semaphore](https://semaphoreci.com/nedap-healthcare/mysql-binuuid-rails).
+Continuous integration / automated tests run [on Semaphore](https://nedap.semaphoreci.com/projects/mysql-binuuid-rails).
 Tests are run against the latest patch version of every minor ActiveRecord release
 since 5.0, as well as *every* patch version of the latest minor version.
 

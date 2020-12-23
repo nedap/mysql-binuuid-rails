@@ -1,0 +1,42 @@
+version: v1.0
+name: Ruby
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: install
+    task:
+      jobs:
+        - name: install dependencies
+          commands:
+            - 'cache restore gemlock-$SEMAPHORE_GIT_BRANCH,gemlock-master'
+            - cache restore
+            - checkout
+            - sem-version ruby 2.7.2
+            - bundle config set path 'vendor/bundle'
+            - bundle update
+            - cache store gemlock-$SEMAPHORE_GIT_BRANCH Gemfile.lock
+            - cache store
+  - name: run specs
+    task:
+      prologue:
+        commands:
+          - sem-service start mysql
+          - checkout
+          - cache restore gemlock-$SEMAPHORE_GIT_BRANCH
+          - cache restore
+          - bundle config set path 'vendor/bundle'
+          - bundle update rails
+      jobs:
+        - name: run tests
+          commands:
+            - bundle exec rake
+          matrix:
+            - env_var: RAILS_VERSION
+              values:
+                - 5.0.7.2
+                - 5.1.7
+                - 5.2.4.4
+                - 6.0.3.4
+                - 6.1.0
