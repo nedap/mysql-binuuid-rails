@@ -153,7 +153,7 @@ https://github.com/nedap/mysql-binuuid-rails
 
 ## Testing
 
-Continuous integration / automated tests run [on Semaphore](https://semaphoreci.com/nedap-healthcare/mysql-binuuid-rails).
+Continuous integration / automated tests run [on Semaphore](https://nedap.semaphoreci.com/projects/mysql-binuuid-rails).
 Tests are run against the latest patch version of every minor ActiveRecord release
 since 5.0, as well as *every* patch version of the latest minor version.
 
