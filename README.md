@@ -1,4 +1,4 @@
-[![Code Climate](https://codeclimate.com/github/nedap/mysql-binuuid-rails/badges/gpa.svg)](https://codeclimate.com/github/nedap/mysql-binuuid-rails)
+[![Maintainability](https://api.codeclimate.com/v1/badges/7bcb6538e7666bc37f9a/maintainability)](https://codeclimate.com/github/nedap/mysql-binuuid-rails/maintainability)
 
 # mysql-binuuid-rails
 
