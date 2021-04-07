@@ -20,6 +20,7 @@ blocks:
         - name: install dependencies
           commands:
             - bundle update --retry 3
+            - cache delete gemlock-$SEMAPHORE_GIT_BRANCH
             - cache store gemlock-$SEMAPHORE_GIT_BRANCH Gemfile.lock
             - cache store
   - name: run specs
