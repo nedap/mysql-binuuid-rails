@@ -1,21 +1,26 @@
 version: v1.0
-name: Ruby
+name: mysql-binuuid-rails
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
+global_job_config:
+  prologue:
+    commands:
+      - checkout
+      - sem-version ruby $(cat .ruby-version)
+      - gem install bundler
+      - bundle config set deployment 'true'
+      - bundle config set path 'vendor/bundle'
+      - 'cache restore gemlock-$SEMAPHORE_GIT_BRANCH,gemlock-main'
+      - cache restore
 blocks:
   - name: install
     task:
       jobs:
         - name: install dependencies
           commands:
-            - 'cache restore gemlock-$SEMAPHORE_GIT_BRANCH,gemlock-master'
-            - cache restore
-            - checkout
-            - sem-version ruby 2.7.2
-            - bundle config set path 'vendor/bundle'
-            - bundle update
+            - bundle update --retry 3
             - cache store gemlock-$SEMAPHORE_GIT_BRANCH Gemfile.lock
             - cache store
   - name: run specs
@@ -23,10 +28,6 @@ blocks:
       prologue:
         commands:
           - sem-service start mysql
-          - checkout
-          - cache restore gemlock-$SEMAPHORE_GIT_BRANCH
-          - cache restore
-          - bundle config set path 'vendor/bundle'
           - bundle update rails
       jobs:
         - name: run tests
@@ -37,6 +38,9 @@ blocks:
               values:
                 - 5.0.7.2
                 - 5.1.7
-                - 5.2.4.4
-                - 6.0.3.4
+                - 5.2.5
+                - 6.0.3.6
                 - 6.1.0
+                - 6.1.1
+                - 6.1.2.1
+                - 6.1.3.1
