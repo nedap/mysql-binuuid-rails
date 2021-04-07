@@ -9,6 +9,7 @@ global_job_config:
     commands:
       - checkout
       - sem-version ruby $(cat .ruby-version)
+      - 'echo "gem: --no-document" > ~/.gemrc'
       - gem install bundler
       - bundle config set path 'vendor/bundle'
       - 'cache restore gemlock-$SEMAPHORE_GIT_BRANCH,gemlock-main'
@@ -20,6 +21,7 @@ blocks:
         - name: install dependencies
           commands:
             - bundle update --retry 3
+            - cache delete gemlock-$SEMAPHORE_GIT_BRANCH
             - cache store gemlock-$SEMAPHORE_GIT_BRANCH Gemfile.lock
             - cache store
   - name: run specs
