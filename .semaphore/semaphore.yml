@@ -10,7 +10,6 @@ global_job_config:
       - checkout
       - sem-version ruby $(cat .ruby-version)
       - gem install bundler
-      - bundle config set deployment 'true'
       - bundle config set path 'vendor/bundle'
       - 'cache restore gemlock-$SEMAPHORE_GIT_BRANCH,gemlock-main'
       - cache restore
