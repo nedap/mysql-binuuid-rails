@@ -12,8 +12,8 @@ global_job_config:
       - 'echo "gem: --no-document" > ~/.gemrc'
       - gem install bundler
       - bundle config set path 'vendor/bundle'
+      - 'cache restore gemlock-$SEMAPHORE_GIT_BRANCH,gemlock-main'
       - 'cache restore gems-$SEMAPHORE_GIT_BRANCH-$(checksum Gemfile.lock),gems-$SEMAPHORE_GIT_BRANCH,gems-main'
-      - cache restore gems-$SEMAPHORE_GIT_BRANCH,gems-main
 blocks:
   - name: install
     task:
