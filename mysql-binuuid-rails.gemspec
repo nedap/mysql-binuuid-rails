@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
 
   spec.require_paths = ["lib"]
   spec.files = Dir["**/*"].select { |f| File.file?(f) }
+                          .reject { |f| f.end_with?(".gem") }
 
   spec.required_ruby_version = ">= 2.6"
 
