@@ -15,11 +15,9 @@ Gem::Specification.new do |spec|
   spec.license  = "MIT"
 
   spec.require_paths = ["lib"]
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
+  spec.files = Dir["**/*"].select { |f| File.file?(f) }
 
-  spec.required_ruby_version = ">= 2.4"
+  spec.required_ruby_version = ">= 2.6"
 
   spec.add_runtime_dependency "activerecord", ENV["RAILS_VERSION"] || ">= 5"
 
