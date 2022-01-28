@@ -12,11 +12,13 @@ describe MyUuidModel do
   end
 
   let(:db_config) do
-    { adapter:  'mysql2',
-      host:     'localhost',
-      username: 'root',
-      password: ENV['DATABASE_MYSQL_PASSWORD'] || '',
-      database: 'binuuid_rails_test' }
+    {
+      adapter:  "mysql2",
+      host:     ENV["MYSQL_HOST"] || "localhost",
+      username: ENV["MYSQL_USERNAME"] || "root",
+      password: ENV["MYSQL_PASSWORD"] || "",
+      database: "binuuid_rails_test"
+    }
   end
 
   before(:all) do
