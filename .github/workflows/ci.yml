@@ -1,0 +1,37 @@
+name: CI
+
+on: push
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    strategy:
+      matrix:
+        rails-version:
+          - 5.2.6
+          - 6.1.4.4
+          - 7.0.0
+          - 7.0.1
+    name: rails test (rails-${{ matrix.rails-version }})
+    runs-on: ubuntu-latest
+    env:
+      MYSQL_HOST: '127.0.0.1'
+      RAILS_VERSION: ${{ matrix.rails-version }}
+    services:
+      mysql:
+        image: mysql:8
+        ports:
+          - "3306:3306"
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        options: --health-cmd "mysqladmin ping" --health-interval 5s --health-timeout 5s --health-retries 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - run: bundle update activerecord
+      - run: bundle exec rake
