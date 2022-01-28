@@ -15,9 +15,10 @@ jobs:
           - 6.1.4.4
           - 7.0.0
           - 7.0.1
-    name: rails test (using rails-${{ matrix.rails-version }})
+    name: rails test (rails-${{ matrix.rails-version }})
     runs-on: ubuntu-latest
     env:
+      MYSQL_HOST: '127.0.0.1'
       RAILS_VERSION: ${{ matrix.rails-version }}
     services:
       mysql:
