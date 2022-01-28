@@ -1,7 +1,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/7bcb6538e7666bc37f9a/maintainability)](https://codeclimate.com/github/nedap/mysql-binuuid-rails/maintainability) [![Build Status](https://nedap.semaphoreci.com/badges/mysql-binuuid-rails/branches/master.svg?style=shields)](https://nedap.semaphoreci.com/projects/mysql-binuuid-rails)
 
-# mysql-binuuid-rails
 
+# mysql-binuuid-rails
 `mysql-binuuid-rails` lets you define attributes of a UUID type on your models
 by leveraging the Attributes API that has been available since Rails 5. By doing
 so, you can store your UUIDs as binary values in your database, and still be
@@ -31,6 +31,7 @@ You know the drill, add this line to your gemfile:
 ```
 gem 'mysql-binuuid-rails'
 ```
+
 
 # Usage
 Using binary columns for UUIDs is very easy. There's only two steps you need to
@@ -75,13 +76,12 @@ class Book < ApplicationRecord
 end
 ```
 
-# Migrating from ActiveUUID
 
+# Migrating from ActiveUUID
 There's a couple of things you need to take into consideration when you're
 migrating from ActiveUUID to `mysql-binuuid-rails`.
 
 ## Replace `include ActiveUUID::UUID` in your models
-
 In your models where you did `include ActiveUUID::UUID`, you now have to
 specify the attribute which is a UUID instead:
 
@@ -91,9 +91,7 @@ class Book < ApplicationRecord
 end
 ```
 
-
 ## No `uuid` column in database migrations
-
 ActiveUUID comes with a neat column type that you can use in migrations. Since
 `mysql-binuuid-rails` does not, you will have to change all migrations in which
 you leveraged on that migration column if you want your migrations to keep
@@ -123,7 +121,6 @@ end
 ```
 
 ## No UUIDTools
-
 ActiveUUID comes with [UUIDTools](https://github.com/sporkmonger/uuidtools).
 `mysql-binuuid-rails` does not. When you retrieve a UUID typed attribute from
 a model when using ActiveUUID, the result is a `UUIDTools::UUID` object. When
@@ -138,12 +135,12 @@ weirdness.
 
 
 # Known issues
-
-  * With Rails 5.0 in combination with uniqueness validations, ActiveRecord generates a wrong query. The `x` in front of the queried value, which casts the value to the proper data type, is missing.
+  * With Rails 5.0 in combination with uniqueness validations, ActiveRecord
+    generates a wrong query. The `x` in front of the queried value, which casts
+    the value to the proper data type, is missing.
 
 
 # Contributing
-
 To start coding on `mysql-binuuid-rails`, fork the project, clone it locally
 and then run `bin/setup` to get up and running. If you want to fool around in
 a console with the changes you made, run `bin/console`.
@@ -152,10 +149,9 @@ Bug reports and pull requests are welcome on GitHub at
 https://github.com/nedap/mysql-binuuid-rails
 
 ## Testing
-
-Continuous integration / automated tests run [on Semaphore](https://nedap.semaphoreci.com/projects/mysql-binuuid-rails).
-Tests are run against the latest patch version of every minor ActiveRecord release
-since 5.0, as well as *every* patch version of the latest minor version.
+For the most recent major version of ActiveRecord, tests are run against the
+latest patch level of all minor versions. For earlier major versions, tests are
+run against the latest minor/patch.
 
 Run tests yourself to verify everything is still working:
 
@@ -163,13 +159,10 @@ Run tests yourself to verify everything is still working:
 $ bundle exec rake
 ```
 
-
 ## Contributors
-
 See [CONTRIBUTORS.md](CONTRIBUTORS.md).
 
 
 # License
-
 The gem is available as open source under the terms of the
 [MIT License](http://opensource.org/licenses/MIT).
