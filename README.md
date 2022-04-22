@@ -133,6 +133,60 @@ Migrating shouldn't be that difficult though. `UUIDTools::UUID` implements
 by default. But it's good to be aware of this in case you're running into
 weirdness.
 
+## Invalid Values
+
+By default, this will raise an exception if an invalid value is attempted to be stored.
+However, the PostgreSQL driver nils invalid UUID values.
+To get PG-friendly behavior, pass in the option `:nil_invalid_values => true` when creating the attribute.
+
+Additionally, as a convenience function, you can add the following to `ApplicationRecord` to get parity between PG and MySQL:
+
+```
+def self.uuid_fields(*fields)
+	if ActiveRecord::Base.connection.adapter_name.downcase.starts_with?("mysql")
+		fields.each do |fld|
+			attribute fld, MySQLBinUUID::Type.new(:nil_invalid_values => true)
+		end
+	end
+end
+```
+
+Then, in your models, just begin them by marking the fields which are UUIDs.
+
+## UUID Type in migrations
+
+To get a UUID type in a migration, add the following to your initializers (Rails 7 specific):
+
+```
+require "active_record"
+require "active_record/connection_adapters/mysql2_adapter"
+require "active_record/type_caster/map"
+
+module ActiveRecord
+  module ConnectionAdapters
+    module MySQL
+      module ColumnMethods
+        def uuid(*args, **options)
+          # http://dba.stackexchange.com/questions/904/mysql-data-type-for-128-bit-integers
+          # http://dev.mysql.com/doc/refman/5.7/en/binary-varbinary.html
+          args.each { |name| column(name, "varbinary(16)", **options.merge(limit: 16)) }
+        end
+      end
+      module SchemaStatements
+        def type_to_sql(type, limit: nil, precision: nil, scale: nil, size: limit_to_size(limit, type), unsigned: nil, **)
+          if type.to_s == "uuid"
+            return "varbinary(16)"
+          else
+            super
+          end
+        end
+      end
+    end
+  end
+end
+
+ActiveRecord::ConnectionAdapters::AbstractMysqlAdapter::NATIVE_DATABASE_TYPES[:uuid] = {:name => "varbinary", :limit => 16}
+```
 
 # Known issues
   * With Rails 5.0 in combination with uniqueness validations, ActiveRecord
