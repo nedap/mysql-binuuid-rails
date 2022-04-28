@@ -11,16 +11,16 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-          - 2.6
-          - 2.7
-          - 3.0
-          - 3.1
+          - "2.6"
+          - "2.7"
+          - "3.0"
+          - "3.1"
         rails-version:
-          - 5.2.7.1
-          - 6.1.5.1
-          - 7.0.0
-          - 7.0.1
-          - 7.0.2
+          - "5.2.7.1"
+          - "6.1.5.1"
+          - "7.0.0"
+          - "7.0.1"
+          - "7.0.2"
     name: tests (ruby-${{ matrix.ruby-version }}, rails-${{ matrix.rails-version }})
     runs-on: ubuntu-latest
     env:
