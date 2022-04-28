@@ -8,14 +8,34 @@ concurrency:
 
 jobs:
   tests:
+    continue-on-error: true
     strategy:
       matrix:
+        ruby-version:
+          - "2.6"
+          - "2.7"
+          - "3.0"
+          - "3.1"
         rails-version:
-          - 5.2.6
-          - 6.1.4.4
-          - 7.0.0
-          - 7.0.1
-    name: rails test (rails-${{ matrix.rails-version }})
+          - "5.2.7.1"
+          - "6.1.5.1"
+          - "7.0.0"
+          - "7.0.1"
+          - "7.0.2"
+        exclude:
+          - ruby-version: "2.6"
+            rails-version: "7.0.0"
+          - ruby-version: "2.6"
+            rails-version: "7.0.1"
+          - ruby-version: "2.6"
+            rails-version: "7.0.2"
+          - ruby-version: "3.0"
+            rails-version: "5.2.7.1"
+          - ruby-version: "3.1"
+            rails-version: "5.2.7.1"
+          - ruby-version: "3.1"
+            rails-version: "7.0.0" # See fixed Ruby 3.1 <> Rails 7.0.0 incompatibility: https://github.com/rails/rails/releases/tag/v7.0.1
+    name: tests (ruby-${{ matrix.ruby-version }}, rails-${{ matrix.rails-version }})
     runs-on: ubuntu-latest
     env:
       MYSQL_HOST: '127.0.0.1'
@@ -33,5 +53,6 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+          ruby-version: ${{ matrix.ruby-version }}
       - run: bundle update activerecord
       - run: bundle exec rake
