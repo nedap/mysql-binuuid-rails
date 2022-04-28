@@ -22,8 +22,12 @@ jobs:
           - "7.0.1"
           - "7.0.2"
         exclude:
-          - ruby-version: ["2.6"]
-            rails-version: ["7.0.0", "7.0.1", "7.0.2"]
+          - ruby-version: "2.6"
+            rails-version: "7.0.0"
+          - ruby-version: "2.6"
+            rails-version: "7.0.1"
+          - ruby-version: "2.6"
+            rails-version: "7.0.2"
     name: tests (ruby-${{ matrix.ruby-version }}, rails-${{ matrix.rails-version }})
     runs-on: ubuntu-latest
     env:
