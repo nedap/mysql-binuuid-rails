@@ -4,14 +4,16 @@ class MyUuidModel < ActiveRecord::Base
   attribute :the_uuid, MySQLBinUUID::Type.new
 end
 
-describe MyUuidModel do
-  include Minitest::Hooks
+class MyUuidModelWithValidations < MyUuidModel
+  validates :the_uuid, uniqueness: true
+end
 
+class MySQLIntegrationTest < ActiveSupport::TestCase
   def connection
     ActiveRecord::Base.connection
   end
 
-  let(:db_config) do
+  def db_config
     {
       adapter:  "mysql2",
       host:     ENV["MYSQL_HOST"] || "localhost",
@@ -21,7 +23,7 @@ describe MyUuidModel do
     }
   end
 
-  before(:all) do
+  setup do
     db_config_without_db_name = db_config.dup
     db_config_without_db_name.delete(:database)
 
@@ -38,96 +40,87 @@ describe MyUuidModel do
     # ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
 
-  after(:all) do
+  teardown do
     connection.drop_database(db_config[:database])
   end
 
-  let(:sample_uuid) { SecureRandom.uuid }
-
-  context "without saving" do
-    it "does not change the uuid when retrieved without saving" do
+  class BeforePersistedTest < MySQLIntegrationTest
+    test "does not change the uuid when retrieved without saving" do
+      sample_uuid = SecureRandom.uuid
       my_model = MyUuidModel.new(the_uuid: sample_uuid)
       assert_equal sample_uuid, my_model.the_uuid
       assert_equal sample_uuid, my_model.attributes["the_uuid"]
     end
-  end
 
-  context "before saving" do
-    describe "rails validation" do
-
-      class MyUuidModelWithValidations < MyUuidModel
-        validates :the_uuid, uniqueness: true
+    test "validates uniqueness" do
+      if ActiveRecord.version < Gem::Version.new("5.1.0")
+        skip("Skipping uniqueness validation test, known issue on Rails/ActiveRecord 5.0")
       end
 
-      it "validates uniqueness" do
-        skip("Skipping uniqueness validation test, known issue on Rails/ActiveRecord 5.0") if ActiveRecord.version < Gem::Version.new("5.1.0")
+      uuid = SecureRandom.uuid
+      MyUuidModelWithValidations.create!(the_uuid: uuid)
+      duplicate = MyUuidModelWithValidations.new(the_uuid: uuid)
 
-        uuid = sample_uuid
-        MyUuidModelWithValidations.create!(the_uuid: uuid)
-        duplicate = MyUuidModelWithValidations.new(the_uuid: uuid)
-
-        assert_equal false, duplicate.valid?
-        assert_equal :taken, duplicate.errors.details[:the_uuid].first[:error]
-      end
-
+      assert_equal false, duplicate.valid?
+      assert_equal :taken, duplicate.errors.details[:the_uuid].first[:error]
     end
   end
 
-  context "after persisting to the database" do
-    before do
-      @my_model = MyUuidModel.create!(the_uuid: sample_uuid)
+  class AfterPersistedTest < MySQLIntegrationTest
+    setup do
+      @sample_uuid = SecureRandom.uuid
+      @my_model = MyUuidModel.create!(the_uuid: @sample_uuid)
     end
 
-    after do
+    teardown do
       MyUuidModel.delete_all
     end
 
-    it "stores a binary value in the database" do
+    test "stores a binary value in the database" do
       raw_value = connection.execute("SELECT * FROM my_uuid_models").to_a.first[1]
       assert_equal raw_value.encoding, Encoding::ASCII_8BIT
     end
 
-    it "stores a binary value without dashes" do
+    test "stores a binary value without dashes" do
       raw_value = connection.execute("SELECT * FROM my_uuid_models").to_a.first[1]
 
       # Create a version without dashes of the sample uuid
-      sample_uuid_no_dashes = sample_uuid.delete("-")
+      sample_uuid_no_dashes = @sample_uuid.delete("-")
 
       # Put it in an array so we can create the binary representation we
       # also get from the database.
       assert_equal [sample_uuid_no_dashes].pack("H*"), raw_value
     end
 
-    it "can be found using .find_by" do
-      find_result = MyUuidModel.find_by(the_uuid: sample_uuid)
+    test "can be found using .find_by" do
+      find_result = MyUuidModel.find_by(the_uuid: @sample_uuid)
       assert_equal find_result, @my_model
-      assert_equal find_result.the_uuid, sample_uuid
+      assert_equal find_result.the_uuid, @sample_uuid
     end
 
-    it "can be found using .where" do
-      results = MyUuidModel.where(the_uuid: sample_uuid)
+    test "can be found using .where" do
+      results = MyUuidModel.where(the_uuid: @sample_uuid)
       assert_equal results.count, 1
       assert_equal results.first, @my_model
-      assert_equal results.first.the_uuid, sample_uuid
+      assert_equal results.first.the_uuid, @sample_uuid
     end
 
-    it "can't be used to inject SQL using .where" do
+    test "can't be used to inject SQL using .where" do
       assert_raises MySQLBinUUID::InvalidUUID do
         MyUuidModel.where(the_uuid: "' OR ''='").first
       end
     end
 
-    it "can't be used to inject SQL using .find_by" do
+    test "can't be used to inject SQL using .find_by" do
       assert_raises MySQLBinUUID::InvalidUUID do
         MyUuidModel.find_by(the_uuid: "' OR ''='")
       end
     end
 
-    it "can't be used to inject SQL while creating" do
+    test "can't be used to inject SQL while creating" do
       assert_raises MySQLBinUUID::InvalidUUID do
         MyUuidModel.create!(the_uuid: "40' + x'40")
       end
     end
   end
-
 end
