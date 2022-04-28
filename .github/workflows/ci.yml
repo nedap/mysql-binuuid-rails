@@ -33,6 +33,8 @@ jobs:
             rails-version: "5.2.7.1"
           - ruby-version: "3.1"
             rails-version: "5.2.7.1"
+          - ruby-version: "3.1"
+            rails-version: "7.0.0" # See fixed Ruby 3.1 <> Rails 7.0.0 incompatibility: https://github.com/rails/rails/releases/tag/v7.0.1
     name: tests (ruby-${{ matrix.ruby-version }}, rails-${{ matrix.rails-version }})
     runs-on: ubuntu-latest
     env:
