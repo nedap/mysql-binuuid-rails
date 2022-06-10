@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir["**/*"].select { |f| File.file?(f) }
                           .reject { |f| f.end_with?(".gem") }
 
-  spec.required_ruby_version = ">= 2.6"
+  spec.required_ruby_version = ">= 2.7"
 
   spec.add_runtime_dependency "activerecord", ENV["RAILS_VERSION"] || ">= 5"
 
