@@ -32,10 +32,10 @@ jobs:
             rails-version: "7.0.2"
           - ruby-version: "2.6"
             rails-version: "7.0.3"
-#           - ruby-version: "3.0"
-#             rails-version: "5.2.7.1"
-#           - ruby-version: "3.1"
-#             rails-version: "5.2.7.1"
+          - ruby-version: "3.0"
+            rails-version: "5.2.8"
+          - ruby-version: "3.1"
+            rails-version: "5.2.8"
           - ruby-version: "3.1"
             rails-version: "7.0.0" # See fixed Ruby 3.1 <> Rails 7.0.0 incompatibility: https://github.com/rails/rails/releases/tag/v7.0.1
     name: tests (ruby-${{ matrix.ruby-version }}, rails-${{ matrix.rails-version }})
