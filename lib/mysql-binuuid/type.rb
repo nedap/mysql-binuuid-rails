@@ -28,7 +28,11 @@ module MySQLBinUUID
     # it to the database.
     def serialize(value)
       return if value.nil?
-      undashed_uuid = strip_dashes(value)
+      if value.is_a?(String) && value.encoding == Encoding::ASCII_8BIT && strip_dashes(value).length != 32
+        undashed_uuid = value.unpack1('H*')
+      else
+        undashed_uuid = strip_dashes(value)
+      end
 
       # To avoid SQL injection, verify that it looks like a UUID. ActiveRecord
       # does not explicity escape the Binary data type. escaping is implicit as
