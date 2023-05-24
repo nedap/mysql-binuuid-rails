@@ -170,7 +170,7 @@ class MySQLIntegrationTest < ActiveSupport::TestCase
       UuidChild.delete_all
     end
 
-    test "beep boop" do
+    test "does not dirty data on association reloads" do
       @parent.uuid_children.build
       @parent.save!
       @parent.uuid_children.reload
