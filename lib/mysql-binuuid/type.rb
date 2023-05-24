@@ -12,13 +12,17 @@ module MySQLBinUUID
       if value.is_a?(MySQLBinUUID::Type::Data)
         # It could be a Data object, in which case we should add dashes to the
         # string value from there.
-        add_dashes(value.to_s)
-      elsif value.is_a?(String) && value.encoding == Encoding::ASCII_8BIT && strip_dashes(value).length != 32
-        # We cannot unpack something that looks like a UUID, with or without
-        # dashes. Not entirely sure why ActiveRecord does a weird combination of
-        # cast and serialize before anything needs to be saved..
-        undashed_uuid = value.unpack1('H*')
-        add_dashes(undashed_uuid.to_s)
+        add_dashes(value.to_s.downcase)
+      elsif value.is_a?(String)
+        if value.encoding == Encoding::ASCII_8BIT && strip_dashes(value).length != 32
+          # We cannot unpack something that looks like a UUID, with or without
+          # dashes. Not entirely sure why ActiveRecord does a weird combination of
+          # cast and serialize before anything needs to be saved..
+          undashed_uuid = value.unpack1('H*')
+          add_dashes(undashed_uuid.to_s.downcase)
+        else
+          value.downcase
+        end
       else
         super
       end
