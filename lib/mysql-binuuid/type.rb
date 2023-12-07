@@ -9,19 +9,9 @@ module MySQLBinUUID
     # Invoked when a value that is returned from the database needs to be
     # displayed into something readable again.
     def cast(value)
-      if value.is_a?(MySQLBinUUID::Type::Data)
-        # It could be a Data object, in which case we should add dashes to the
-        # string value from there.
-        add_dashes(value.to_s)
-      elsif value.is_a?(String) && value.encoding == Encoding::ASCII_8BIT && strip_dashes(value).length != 32
-        # We cannot unpack something that looks like a UUID, with or without
-        # dashes. Not entirely sure why ActiveRecord does a weird combination of
-        # cast and serialize before anything needs to be saved..
-        undashed_uuid = value.unpack1('H*')
-        add_dashes(undashed_uuid.to_s)
-      else
-        super
-      end
+      return unless value
+
+      super(add_dashes(value.to_s)) # super will encode the value as binary (Encoding::BINARY)
     end
 
     # Invoked when the provided value needs to be serialized before storing
@@ -38,6 +28,24 @@ module MySQLBinUUID
       end
 
       Data.new(undashed_uuid)
+    end
+
+    # Converts a value from database input to the appropriate ruby type. The
+    # return value of this method will be returned from
+    # ActiveRecord::AttributeMethods::Read#read_attribute. The default
+    # implementation just calls Value#cast.
+    #
+    # +value+ The raw input, as provided from the database.
+    def deserialize(value)
+      return unless value
+
+      # If the value is a binary data, convert it to a hex string, and call cast(value)
+      if value.is_a?(String) && value.encoding == Encoding::ASCII_8BIT
+        super(value.unpack1("H*"))
+      else
+        super # foward to cast(value)
+      end
+      super
     end
 
     # We're inheriting from the Binary type since ActiveRecord in that case
