@@ -45,7 +45,6 @@ module MySQLBinUUID
       else
         super # foward to cast(value)
       end
-      super
     end
 
     # We're inheriting from the Binary type since ActiveRecord in that case
