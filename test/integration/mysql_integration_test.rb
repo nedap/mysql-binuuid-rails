@@ -106,7 +106,8 @@ class MySQLIntegrationTest < ActiveSupport::TestCase
     end
 
     test "can't be used to inject SQL using .where" do
-      assert_raises MySQLBinUUID::InvalidUUID do
+      expected_error = ActiveRecord.version.to_s < "7.1" ? MySQLBinUUID::InvalidUUID : ActiveRecord::StatementInvalid
+      assert_raises(expected_error) do
         MyUuidModel.where(the_uuid: "' OR ''='").first
       end
     end
