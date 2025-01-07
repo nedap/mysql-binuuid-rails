@@ -13,6 +13,9 @@ jobs:
       matrix:
         ruby: [ "3.3", "3.2", "3.1" ]
         rails: [ "8.0", "7.1", "7.0", "6.1" ]
+        # Rails 8 needs Ruby 3.2 or higher
+        exclude:
+          - { ruby: "3.1", rails: "8.0" }
     name: "tests (Ruby: ${{ matrix.ruby }}, Rails: ${{ matrix.rails }})"
     runs-on: ubuntu-latest
     env:
