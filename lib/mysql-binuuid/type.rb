@@ -2,6 +2,12 @@ module MySQLBinUUID
   class InvalidUUID < StandardError; end
 
   class Type < ActiveModel::Type::Binary
+    attr_accessor :options
+
+    def initialize(opts = {})
+      self.options = opts
+    end
+
     def type
       :uuid
     end
@@ -34,6 +40,7 @@ module MySQLBinUUID
       # does not explicity escape the Binary data type. escaping is implicit as
       # the Binary data type always converts its value to a hex string.
       unless valid_undashed_uuid?(undashed_uuid)
+        return nil if options[:nil_invalid_values]
         raise MySQLBinUUID::InvalidUUID, "#{value} is not a valid UUID"
       end
 
