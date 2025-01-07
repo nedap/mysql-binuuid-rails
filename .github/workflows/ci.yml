@@ -8,6 +8,7 @@ concurrency:
 
 jobs:
   tests:
+    # Continue on error so that we see the results of all tests in the matrix.
     continue-on-error: true
     strategy:
       matrix:
