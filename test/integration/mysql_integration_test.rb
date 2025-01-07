@@ -53,10 +53,6 @@ class MySQLIntegrationTest < ActiveSupport::TestCase
     end
 
     test "validates uniqueness" do
-      if ActiveRecord.version < Gem::Version.new("5.1.0")
-        skip("Skipping uniqueness validation test, known issue on Rails/ActiveRecord 5.0")
-      end
-
       uuid = SecureRandom.uuid
       MyUuidModelWithValidations.create!(the_uuid: uuid)
       duplicate = MyUuidModelWithValidations.new(the_uuid: uuid)

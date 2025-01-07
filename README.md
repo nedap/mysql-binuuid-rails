@@ -134,12 +134,6 @@ by default. But it's good to be aware of this in case you're running into
 weirdness.
 
 
-# Known issues
-  * With Rails 5.0 in combination with uniqueness validations, ActiveRecord
-    generates a wrong query. The `x` in front of the queried value, which casts
-    the value to the proper data type, is missing.
-
-
 # Contributing
 To start coding on `mysql-binuuid-rails`, fork the project, clone it locally
 and then run `bin/setup` to get up and running. If you want to fool around in
