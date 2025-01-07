@@ -4,8 +4,31 @@ class MyUuidModel < ActiveRecord::Base
   attribute :the_uuid, MySQLBinUUID::Type.new
 end
 
+class UuidPkeyModel < ActiveRecord::Base
+  self.abstract_class = true
+
+  attribute :id, MySQLBinUUID::Type.new
+
+  after_initialize :set_id
+
+  private
+
+  def set_id
+    self.id ||= SecureRandom.uuid
+  end
+end
+
 class MyUuidModelWithValidations < MyUuidModel
   validates :the_uuid, uniqueness: true
+end
+
+class UuidParent < UuidPkeyModel
+  has_many :uuid_children
+end
+
+class UuidChild < UuidPkeyModel
+  belongs_to :uuid_parent
+  attribute :uuid_parent_id, MySQLBinUUID::Type.new
 end
 
 class MySQLIntegrationTest < ActiveSupport::TestCase
@@ -35,6 +58,9 @@ class MySQLIntegrationTest < ActiveSupport::TestCase
     ActiveRecord::Base.establish_connection(db_config)
     connection.create_table("my_uuid_models")
     connection.add_column("my_uuid_models", "the_uuid", :binary, limit: 16)
+    connection.create_table('uuid_parents', id: 'binary(16)')
+    connection.create_table('uuid_children', id: 'binary(16)')
+    connection.add_columns('uuid_children', 'uuid_parent_id', type: 'binary(16)')
 
     # Uncomment this line to get logging on stdout
     # ActiveRecord::Base.logger = Logger.new(STDOUT)
@@ -119,6 +145,35 @@ class MySQLIntegrationTest < ActiveSupport::TestCase
       assert_raises MySQLBinUUID::InvalidUUID do
         MyUuidModel.create!(the_uuid: "40' + x'40")
       end
+    end
+
+    test "always downcases the user-supplied value" do
+      @my_model.the_uuid = @sample_uuid.upcase
+      assert_equal @sample_uuid, @my_model.the_uuid
+    end
+
+    test "treats case-only changes as non-dirtying" do
+      @my_model.the_uuid = @sample_uuid.upcase
+      assert_equal false, @my_model.will_save_change_to_the_uuid?
+    end
+  end
+
+  class ComplexRelationTest < MySQLIntegrationTest
+    setup do
+      @parent = UuidParent.new(id: SecureRandom.uuid.upcase)
+    end
+
+    teardown do
+      UuidParent.delete_all
+      UuidChild.delete_all
+    end
+
+    test "does not dirty data on association reloads" do
+      @parent.uuid_children.build
+      @parent.save!
+      @parent.uuid_children.reload
+
+      refute @parent.uuid_children.first.uuid_parent_id_changed?
     end
   end
 end
