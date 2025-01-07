@@ -53,10 +53,6 @@ class MySQLIntegrationTest < ActiveSupport::TestCase
     end
 
     test "validates uniqueness" do
-      if ActiveRecord.version < Gem::Version.new("5.1.0")
-        skip("Skipping uniqueness validation test, known issue on Rails/ActiveRecord 5.0")
-      end
-
       uuid = SecureRandom.uuid
       MyUuidModelWithValidations.create!(the_uuid: uuid)
       duplicate = MyUuidModelWithValidations.new(the_uuid: uuid)
@@ -106,7 +102,9 @@ class MySQLIntegrationTest < ActiveSupport::TestCase
     end
 
     test "can't be used to inject SQL using .where" do
-      assert_raises MySQLBinUUID::InvalidUUID do
+      # In Rails 7.1, the error gets wrapped in an ActiveRecord::StatementInvalid.
+      expected_error = ActiveRecord.version.to_s.start_with?("7.1") ? ActiveRecord::StatementInvalid : MySQLBinUUID::InvalidUUID
+      assert_raises(expected_error) do
         MyUuidModel.where(the_uuid: "' OR ''='").first
       end
     end
